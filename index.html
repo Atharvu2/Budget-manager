@@ -1,0 +1,685 @@
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f0;--surface:#ffffff;--surface2:#f0ede6;--surface3:#e6e3da;
+  --text:#18160f;--text2:#6a6457;--text3:#a09890;
+  --border:#dedad0;--border2:#c8c3b8;
+  --accent:#5b6af0;--accent2:#7b88f5;--accent-bg:#eef0fe;--accent-text:#3040c8;
+  --teal:#0fa888;--teal-bg:#e4f7f3;--teal-text:#0a7862;
+  --rose:#e8547a;--rose-bg:#fde8ef;--rose-text:#b83360;
+  --amber:#d4890a;--amber-bg:#fdf3e0;--amber-text:#a86a06;
+  --danger:#d63b3b;--danger-bg:#fce9e9;
+  --pill-r:20px;--card-r:14px;--input-r:9px;
+  --font-main:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-pixel:'Press Start 2P',monospace;
+  --num-font:var(--font-mono);
+}
+.dark{
+  --bg:#080808;--surface:#0f0f0f;--surface2:#141414;--surface3:#1a1a1a;
+  --text:#e8e4f0;--text2:#7a7590;--text3:#3d3a4a;
+  --border:#1f1f2e;--border2:#2a2a3e;
+  --accent:#7b88f5;--accent2:#a0aaff;--accent-bg:#0d0f24;--accent-text:#a0aaff;
+  --teal:#1dd4aa;--teal-bg:#041a16;--teal-text:#1dd4aa;
+  --rose:#f07098;--rose-bg:#200a12;--rose-text:#f07098;
+  --amber:#f0aa30;--amber-bg:#1a1000;--amber-text:#f0aa30;
+  --danger:#f05050;--danger-bg:#1a0808;
+}
+body{font-family:var(--font-main);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;transition:background 0.25s,color 0.25s}
+.app{display:flex;flex-direction:column;min-height:100vh}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 22px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-0.5px;color:var(--text)}
+.logo-icon{width:30px;height:30px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:16px;height:16px;fill:white}
+.topbar-right{display:flex;gap:8px}
+.toggle-btn{padding:6px 13px;border-radius:var(--pill-r);border:1px solid var(--border2);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;font-weight:500;transition:all 0.15s;letter-spacing:0.02em}
+.toggle-btn:hover{background:var(--surface3);color:var(--text)}
+.toggle-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+
+.main{display:grid;grid-template-columns:220px 1fr;flex:1}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:18px 12px;display:flex;flex-direction:column;gap:2px}
+.sidebar-label{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-weight:600;padding:10px 10px 4px;margin-top:6px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all 0.12s;border:1px solid transparent}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--accent-bg);color:var(--accent);border-color:rgba(91,106,240,0.18)}
+.nav-item svg{width:14px;height:14px;flex-shrink:0}
+.dark .nav-item.active{color:var(--accent-text)}
+
+.content{padding:22px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.page{display:none}.page.active{display:flex;flex-direction:column;gap:16px}
+.page-title{font-size:19px;font-weight:700;letter-spacing:-0.4px}
+.page-sub{font-size:11px;color:var(--text2);margin-top:2px;font-weight:400}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between}
+
+.btn{padding:7px 15px;border-radius:var(--pill-r);border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;transition:all 0.15s;display:inline-flex;align-items:center;gap:5px;letter-spacing:0.01em}
+.btn-primary{background:var(--accent);color:white}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2)}.btn-outline:hover{background:var(--surface2)}
+.btn-sm{padding:5px 11px;font-size:11px}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-r);padding:16px}
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.metric-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--card-r);padding:14px}
+.metric-label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);font-weight:600;margin-bottom:5px}
+.metric-value{font-family:var(--num-font);font-size:18px;font-weight:500;color:var(--text)}
+.metric-sub{font-size:10px;color:var(--text2);margin-top:2px}
+.mtag{display:inline-block;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:600;margin-top:4px}
+.mtag-blue{background:var(--accent-bg);color:var(--accent-text)}
+.mtag-teal{background:var(--teal-bg);color:var(--teal-text)}
+.mtag-rose{background:var(--rose-bg);color:var(--rose-text)}
+.mtag-amber{background:var(--amber-bg);color:var(--amber-text)}
+
+label{font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:4px;letter-spacing:0.02em}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--input-r);background:var(--surface2);color:var(--text);font-family:var(--font-main);font-size:12px;outline:none;transition:border 0.15s}
+input:focus,select:focus{border-color:var(--accent)}
+input[type=number]{font-family:var(--num-mono)}
+.ip{position:relative}.ip span{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:11px}
+.ip input{padding-left:20px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.fg .s2{grid-column:span 2}
+.sect{font-size:10px;font-weight:700;color:var(--text3);margin-bottom:11px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:0.1em}
+.sect::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.fi{display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:5px}
+.fi-name{flex:1;font-size:12px;font-weight:600}
+.fi-meta{font-size:10px;color:var(--text3)}
+.fi-amt{font-family:var(--num-font);font-size:11px;color:var(--teal);font-weight:500}
+.fi-del{background:none;border:none;color:var(--text3);cursor:pointer;padding:2px 5px;border-radius:5px;font-size:12px;transition:all 0.12s}
+.fi-del:hover{background:var(--danger-bg);color:var(--danger)}
+
+.pbar{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-top:5px}
+.pbar-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
+.pbar-fill.ok{background:var(--teal)}
+.pbar-fill.warn{background:var(--amber)}
+.pbar-fill.bad{background:var(--rose)}
+
+.tx-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border)}
+.tx-item:last-child{border-bottom:none}
+.tx-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.tx-name{flex:1;font-size:12px;font-weight:600}
+.tx-cat{font-size:10px;color:var(--text3)}
+.tx-amt{font-family:var(--num-font);font-size:11px;font-weight:500}
+.tx-amt.neg{color:var(--rose)}.tx-amt.pos{color:var(--teal)}
+
+.srow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)}
+.srow:last-child{border-bottom:none}
+.skey{font-size:11px;color:var(--text2)}
+.sval{font-family:var(--num-font);font-size:11px;font-weight:500}
+
+.spi-item{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:5px}
+.spi-label{font-size:12px;font-weight:600}
+.spi-val{font-family:var(--num-font);font-size:12px;color:var(--teal);font-weight:500}
+
+.alert{padding:9px 13px;border-radius:8px;font-size:11px;margin-bottom:5px;font-weight:500}
+.al-ok{background:var(--teal-bg);color:var(--teal-text)}
+.al-warn{background:var(--amber-bg);color:var(--amber-text)}
+.al-bad{background:var(--rose-bg);color:var(--rose-text)}
+.al-info{background:var(--accent-bg);color:var(--accent-text)}
+
+.mode-banner{display:flex;align-items:flex-start;gap:8px;padding:9px 13px;border-radius:9px;background:var(--accent-bg);border:1px solid rgba(91,106,240,0.18);font-size:11px;color:var(--accent-text);margin-bottom:4px;font-weight:500}
+
+.hbar{display:flex;height:24px;border-radius:6px;overflow:hidden;gap:1px}
+.hbseg{display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:rgba(255,255,255,0.85);transition:flex 0.5s;min-width:0}
+
+.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.day-cell{aspect-ratio:1;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:600;border:1px solid transparent;color:var(--text3)}
+.day-cell.in-range{background:var(--accent-bg);color:var(--accent-text);border-color:rgba(91,106,240,0.15)}
+.day-cell.has-extra{background:var(--rose-bg);color:var(--rose-text);border-color:rgba(232,84,122,0.2)}
+.day-cell.today{border-color:var(--accent)!important;font-weight:700}
+.day-cell.past{opacity:0.3}
+
+.goal-meter{height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;margin:7px 0}
+.goal-fill{height:100%;border-radius:3px;background:var(--teal);transition:width 0.5s}
+.empty-st{text-align:center;padding:24px;color:var(--text3);font-size:11px}
+.divider{height:1px;background:var(--border);margin:8px 0}
+
+.hl-box{background:var(--accent-bg);border:1px solid rgba(91,106,240,0.2);border-radius:12px;padding:16px 18px}
+.hl-label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-text);font-weight:700;margin-bottom:4px}
+.hl-val{font-family:var(--num-font);font-size:24px;font-weight:500;color:var(--text)}
+.hl-sub{font-size:10px;color:var(--text2);margin-top:3px}
+
+.row32{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px}
+.dot-leg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2)}
+.dot-leg span{width:8px;height:8px;border-radius:2px;display:inline-block;flex-shrink:0}
+
+.pixel-mode .metric-value,.pixel-mode .sval,.pixel-mode .fi-amt,.pixel-mode .tx-amt,.pixel-mode .spi-val,.pixel-mode .hl-val{font-family:var(--font-pixel)!important;font-size:8px!important;line-height:2.2!important}
+</style>
+
+<div class="app" id="app">
+<nav class="topbar">
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 16 16"><path d="M8 2L14 5V8C14 11.3 11.4 14 8 15C4.6 14 2 11.3 2 8V5L8 2Z"/></svg></div>
+    Ledger
+  </div>
+  <div class="topbar-right">
+    <button class="toggle-btn" id="pixelToggle" onclick="togglePixel()">8-bit</button>
+    <button class="toggle-btn" id="darkToggle" onclick="toggleDark()">Dark</button>
+  </div>
+</nav>
+
+<div class="main">
+<aside class="sidebar">
+  <div class="sidebar-label">Main</div>
+  <div class="nav-item active" id="nav-setup" onclick="showPage('setup')">
+    <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+    Setup
+  </div>
+  <div class="nav-item" id="nav-fixed" onclick="showPage('fixed')">
+    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 4h12v1.5H2zM2 7.25h12v1.5H2zM2 10.5h8v1.5H2z"/></svg>
+    Fixed Expenses
+  </div>
+  <div class="nav-item" id="nav-extras" onclick="showPage('extras')">
+    <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
+    Extra Spending
+  </div>
+  <div class="nav-item" id="nav-overview" onclick="showPage('overview')">
+    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 12L6 8l3 3 5-6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    Overview
+  </div>
+  <div class="nav-item" id="nav-calendar" onclick="showPage('calendar')">
+    <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1.5" y="3" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 1.5V4M11 1.5V4M1.5 6.5h13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+    Calendar
+  </div>
+  <div class="divider"></div>
+  <div class="sidebar-label">Goals</div>
+  <div class="nav-item" id="nav-goals" onclick="showPage('goals')">
+    <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    Savings Goals
+  </div>
+</aside>
+
+<main class="content">
+
+<!-- SETUP -->
+<div class="page active" id="page-setup">
+  <div class="page-header">
+    <div><div class="page-title">Budget Setup</div><div class="page-sub">Define your period and money available</div></div>
+    <button class="btn btn-primary btn-sm" onclick="applySetup()">Save</button>
+  </div>
+  <div id="setupAlerts"></div>
+  <div class="card">
+    <div class="sect">Period Mode</div>
+    <div class="fg">
+      <div class="s2" style="display:flex;flex-direction:column;gap:4px"><label>What are you budgeting for?</label>
+        <select id="periodMode" onchange="updateModeUI()">
+          <option value="full">Full month / fresh start</option>
+          <option value="remaining">Mid-period — I already spent some</option>
+        </select>
+      </div>
+    </div>
+    <div id="fullFields" style="margin-top:12px">
+      <div class="fg">
+        <div style="display:flex;flex-direction:column;gap:4px"><label>Total budget (₹)</label><div class="ip"><span>₹</span><input type="number" id="totalBudget" value="15000"></div></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><label>Total days</label><input type="number" id="totalDays" value="30" min="1"></div>
+      </div>
+    </div>
+    <div id="remFields" style="display:none;margin-top:12px">
+      <div class="mode-banner">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5v.5"/></svg>
+        <div>Mid-period: fixed expenses will only be counted for your <strong>remaining days</strong>, not the full month.</div>
+      </div>
+      <div class="fg" style="margin-top:10px">
+        <div style="display:flex;flex-direction:column;gap:4px"><label>Original budget (₹)</label><div class="ip"><span>₹</span><input type="number" id="origBudget" value="12000" onchange="updateRemPreview()"></div></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><label>Already spent (₹)</label><div class="ip"><span>₹</span><input type="number" id="alreadySpent" value="3000" onchange="updateRemPreview()"></div></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><label>Days remaining</label><input type="number" id="daysRem" value="18" min="1" onchange="updateRemPreview()"></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><label>Total days in period</label><input type="number" id="totalDaysFull" value="30" min="1"></div>
+      </div>
+      <div id="remPreview" style="margin-top:8px"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sect">Spending Habits</div>
+    <div class="fg">
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Outing / extra-spend days</label><input type="number" id="outingDays" value="3" min="0"></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Budget per outing (₹)</label><div class="ip"><span>₹</span><input type="number" id="outingPerDay" value="600"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FIXED -->
+<div class="page" id="page-fixed">
+  <div class="page-header">
+    <div><div class="page-title">Fixed Expenses</div><div class="page-sub" id="fixedSub">Recurring costs over your remaining days</div></div>
+    <button class="btn btn-primary btn-sm" onclick="confirmFixed()">+ Add</button>
+  </div>
+  <div class="card">
+    <div class="sect">Add Expense</div>
+    <div class="fg">
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Name</label><input type="text" id="fixedName" placeholder="e.g. Lunch"></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Amount per occurrence (₹)</label><div class="ip"><span>₹</span><input type="number" id="fixedAmt" id="fixedAmt" placeholder="0" oninput="updateFP()"></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Frequency</label>
+        <select id="fixedFreq" onchange="updateFixedFreqUI()">
+          <option value="daily">Every day</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Once this period</option>
+          <option value="custom">Custom days</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px" id="customDG" style="display:none"><label>Days it applies</label><input type="number" id="fixedCustomD" value="5" min="1" oninput="updateFP()"></div>
+      <div class="s2"><div id="fpText" style="font-size:10px;color:var(--text2);padding:3px 0;font-weight:500"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sect">Your Fixed Expenses</div>
+    <div id="fixedList"><div class="empty-st">No fixed expenses yet</div></div>
+    <div id="fixedSumm" style="display:none">
+      <div class="divider"></div>
+      <div class="srow"><span class="skey">Daily total (daily items)</span><span class="sval" id="fDailyT">₹0</span></div>
+      <div class="srow"><span class="skey">Total over period</span><span class="sval" id="fPeriodT">₹0</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXTRAS -->
+<div class="page" id="page-extras">
+  <div class="page-header"><div><div class="page-title">Extra Spending</div><div class="page-sub">Log unplanned purchases</div></div></div>
+  <div class="card">
+    <div class="sect">Log Expense</div>
+    <div class="fg">
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Description</label><input type="text" id="extraName" placeholder="e.g. Movie night"></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Amount (₹)</label><div class="ip"><span>₹</span><input type="number" id="extraAmt" placeholder="0"></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Date</label><input type="date" id="extraDate"></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Category</label>
+        <select id="extraCat"><option>Food & Drink</option><option>Entertainment</option><option>Transport</option><option>Shopping</option><option>Health</option><option>Other</option></select>
+      </div>
+      <div class="s2" style="display:flex;justify-content:flex-end"><button class="btn btn-primary btn-sm" onclick="addExtra()">Log</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sect">Logged Extras</div>
+    <div id="extraList"><div class="empty-st">Nothing logged yet</div></div>
+    <div id="extraTotRow" style="display:none">
+      <div class="divider"></div>
+      <div class="srow"><span class="skey" style="font-weight:700">Total</span><span class="sval tx-amt neg" id="extraTot">₹0</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="page" id="page-overview">
+  <div class="page-header">
+    <div><div class="page-title">Overview</div><div class="page-sub" id="ovSub">Your full picture</div></div>
+    <button class="btn btn-outline btn-sm" onclick="recalc()">Refresh</button>
+  </div>
+  <div id="ovBanner"></div>
+  <div class="hl-box">
+    <div class="hl-label">Money left to use</div>
+    <div class="hl-val" id="hlRem">₹0</div>
+    <div class="hl-sub" id="hlSub">after all committed costs</div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric-card"><div class="metric-label">Available balance</div><div class="metric-value" id="ovAvail">₹0</div><div class="metric-sub" id="ovAvailSub">—</div></div>
+    <div class="metric-card"><div class="metric-label">Fixed costs</div><div class="metric-value" id="ovFixed">₹0</div><div class="metric-sub" id="ovFixedSub">remaining days</div></div>
+    <div class="metric-card"><div class="metric-label">Planned outings</div><div class="metric-value" id="ovOutings">₹0</div><div class="metric-sub" id="ovOutSub">—</div></div>
+  </div>
+
+  <div class="row32">
+    <div class="card">
+      <div class="sect">Breakdown</div>
+      <div id="bdRows"></div>
+      <div style="margin-top:12px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px;font-weight:600">Allocation</div>
+        <div class="hbar" id="hbar">
+          <div class="hbseg" style="background:#5b6af0;flex:1" id="hb-f"></div>
+          <div class="hbseg" style="background:#e8547a;flex:0" id="hb-e"></div>
+          <div class="hbseg" style="background:#0fa888;flex:0" id="hb-o"></div>
+          <div class="hbseg" style="background:#3d3a4a;flex:0" id="hb-r"></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:5px;flex-wrap:wrap">
+          <div class="dot-leg"><span style="background:#5b6af0"></span>Fixed</div>
+          <div class="dot-leg"><span style="background:#e8547a"></span>Extras</div>
+          <div class="dot-leg"><span style="background:#0fa888"></span>Outings</div>
+          <div class="dot-leg"><span style="background:#3d3a4a"></span>Free</div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:3px;font-weight:600">Budget used</div>
+        <div class="pbar"><div class="pbar-fill ok" id="budgetBar" style="width:0%"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px;text-align:right" id="budgetPct">0%</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sect">Daily Budget</div>
+      <div id="spendRec"></div>
+    </div>
+  </div>
+
+  <div class="row32">
+    <div class="card">
+      <div class="sect">Spending Pie</div>
+      <div id="pieLegend" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px"></div>
+      <div style="position:relative;width:100%;height:200px">
+        <canvas id="spendPie" role="img" aria-label="Pie chart of spending breakdown across fixed, extras, outings and free budget">Spending breakdown by category.</canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sect">Recommendations</div>
+      <div id="recs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="page-header"><div><div class="page-title">Calendar</div><div class="page-sub">Your remaining window</div></div></div>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:13px;font-weight:700" id="calLabel">—</div>
+      <div style="display:flex;gap:10px">
+        <div class="dot-leg"><span style="background:var(--accent)"></span>In range</div>
+        <div class="dot-leg"><span style="background:var(--rose)"></span>Extra logged</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px">
+      <div style="font-size:9px;color:var(--text3);text-align:center;font-weight:600">S</div><div style="font-size:9px;color:var(--text3);text-align:center;font-weight:600">M</div><div style="font-size:9px;color:var(--text3);text-align:center;font-weight:600">T</div><div style="font-size:9px;color:var(--text3);text-align:center;font-weight:600">W</div><div style="font-size:9px;color:var(--text3);text-align:center;font-weight:600">T</div><div style="font-size:9px;color:var(--text3);text-align:center;font-weight:600">F</div><div style="font-size:9px;color:var(--text3);text-align:center;font-weight:600">S</div>
+    </div>
+    <div class="day-grid" id="calGrid"></div>
+    <div style="margin-top:10px;font-size:10px;color:var(--text3)" id="calNote"></div>
+  </div>
+</div>
+
+<!-- GOALS -->
+<div class="page" id="page-goals">
+  <div class="page-header">
+    <div><div class="page-title">Savings Goals</div><div class="page-sub">What you're building towards</div></div>
+    <button class="btn btn-primary btn-sm" onclick="toggleGF()">+ Goal</button>
+  </div>
+  <div class="card" id="goalFC" style="display:none">
+    <div class="sect">New Goal</div>
+    <div class="fg">
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Name</label><input type="text" id="goalName" placeholder="e.g. New laptop"></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Target (₹)</label><div class="ip"><span>₹</span><input type="number" id="goalTarget"></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Already saved (₹)</label><div class="ip"><span>₹</span><input type="number" id="goalSaved" value="0"></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label>Monthly contribution (₹)</label><div class="ip"><span>₹</span><input type="number" id="goalMonthly"></div></div>
+      <div class="s2" style="display:flex;gap:7px;justify-content:flex-end">
+        <button class="btn btn-outline btn-sm" onclick="toggleGF()">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="addGoal()">Save</button>
+      </div>
+    </div>
+  </div>
+  <div id="goalsList"></div>
+</div>
+
+</main>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const fmt = v => '₹' + Math.round(v).toLocaleString('en-IN');
+let pieChart = null;
+let S = {
+  dark:false,pixel:false,
+  periodMode:'full',totalBudget:15000,totalDays:30,
+  origBudget:12000,alreadySpent:3000,daysRem:18,totalDaysFull:30,
+  outingDays:3,outingPerDay:600,
+  fixed:[],extras:[],goals:[]
+};
+
+function toggleDark(){
+  S.dark=!S.dark;
+  document.getElementById('app').classList.toggle('dark',S.dark);
+  document.getElementById('darkToggle').classList.toggle('active',S.dark);
+  if(pieChart) updatePieColors();
+}
+function togglePixel(){
+  S.pixel=!S.pixel;
+  document.getElementById('app').classList.toggle('pixel-mode',S.pixel);
+  document.getElementById('pixelToggle').classList.toggle('active',S.pixel);
+}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  if(id==='overview') recalc();
+  if(id==='calendar') renderCal();
+  if(id==='fixed') updateFixedSub();
+}
+
+function avail(){ return S.periodMode==='full'?S.totalBudget:S.origBudget-S.alreadySpent; }
+function days(){ return S.periodMode==='full'?S.totalDays:S.daysRem; }
+function daysForF(f){
+  const d=days();
+  if(f.freq==='daily') return d;
+  if(f.freq==='weekly') return Math.max(1,Math.round(d/7));
+  if(f.freq==='monthly') return 1;
+  if(f.freq==='custom') return Math.min(f.cd,d);
+  return d;
+}
+function fixedTotal(){ return S.fixed.reduce((s,f)=>s+f.amt*daysForF(f),0); }
+function extrasTotal(){ return S.extras.reduce((s,e)=>s+e.amt,0); }
+function outTotal(){ return S.outingDays*S.outingPerDay; }
+
+function updateModeUI(){
+  const m=document.getElementById('periodMode').value;
+  document.getElementById('fullFields').style.display=m==='full'?'':'none';
+  document.getElementById('remFields').style.display=m==='remaining'?'':'none';
+  if(m==='remaining') updateRemPreview();
+}
+function updateRemPreview(){
+  const orig=+document.getElementById('origBudget').value||0;
+  const spent=+document.getElementById('alreadySpent').value||0;
+  const rem=+document.getElementById('daysRem').value||0;
+  const a=orig-spent;
+  document.getElementById('remPreview').innerHTML=`<div class="alert al-info">You have <strong>${fmt(a)}</strong> left for <strong>${rem} remaining days</strong> — ${fmt(a/Math.max(1,rem))}/day on average.</div>`;
+}
+function applySetup(){
+  S.periodMode=document.getElementById('periodMode').value;
+  if(S.periodMode==='full'){S.totalBudget=+document.getElementById('totalBudget').value||0;S.totalDays=+document.getElementById('totalDays').value||30;}
+  else{S.origBudget=+document.getElementById('origBudget').value||0;S.alreadySpent=+document.getElementById('alreadySpent').value||0;S.daysRem=+document.getElementById('daysRem').value||1;S.totalDaysFull=+document.getElementById('totalDaysFull').value||30;}
+  S.outingDays=+document.getElementById('outingDays').value||0;
+  S.outingPerDay=+document.getElementById('outingPerDay').value||0;
+  const a=document.createElement('div');a.className='alert al-ok';a.textContent='Setup saved! Go to Overview.';
+  const el=document.getElementById('setupAlerts');el.innerHTML='';el.appendChild(a);setTimeout(()=>a.remove(),3000);
+  updateFixedSub();renderFixed();
+}
+
+function updateFixedFreqUI(){
+  const f=document.getElementById('fixedFreq').value;
+  document.getElementById('customDG').style.display=f==='custom'?'':'none';
+  updateFP();
+}
+function updateFP(){
+  const amt=+document.getElementById('fixedAmt').value||0;
+  const freq=document.getElementById('fixedFreq').value;
+  const cd=+document.getElementById('fixedCustomD').value||1;
+  const d=days();
+  let n=d,label='';
+  if(freq==='daily'){n=d;label=`every day × ${d}d`;}
+  else if(freq==='weekly'){n=Math.max(1,Math.round(d/7));label=`~${n} weeks`;}
+  else if(freq==='monthly'){n=1;label='once';}
+  else if(freq==='custom'){n=Math.min(cd,d);label=`${n} days`;}
+  document.getElementById('fpText').textContent=amt>0?`→ ${fmt(amt)} × ${label} = ${fmt(amt*n)} total`:'';
+}
+function confirmFixed(){
+  const name=document.getElementById('fixedName').value.trim();
+  const amt=+document.getElementById('fixedAmt').value;
+  const freq=document.getElementById('fixedFreq').value;
+  const cd=+document.getElementById('fixedCustomD').value||1;
+  if(!name||!amt) return;
+  S.fixed.push({id:Date.now(),name,amt,freq,cd});
+  document.getElementById('fixedName').value='';
+  document.getElementById('fixedAmt').value='';
+  document.getElementById('fpText').textContent='';
+  renderFixed();
+}
+function removeFixed(id){S.fixed=S.fixed.filter(f=>f.id!==id);renderFixed();}
+function updateFixedSub(){const el=document.getElementById('fixedSub');if(el)el.textContent=`Recurring costs over your ${days()} remaining days`;}
+function renderFixed(){
+  const list=document.getElementById('fixedList');const summ=document.getElementById('fixedSumm');
+  if(!S.fixed.length){list.innerHTML='<div class="empty-st">No fixed expenses yet</div>';summ.style.display='none';return;}
+  list.innerHTML=S.fixed.map(f=>{
+    const n=daysForF(f);const tot=f.amt*n;
+    const fl={daily:`${n}d`,weekly:`${n}wk`,monthly:'1×',custom:`${n}d`}[f.freq];
+    return `<div class="fi"><div style="flex:1"><div class="fi-name">${f.name}</div><div class="fi-meta">${fmt(f.amt)} × ${fl}</div></div><div class="fi-amt">${fmt(tot)}</div><button class="fi-del" onclick="removeFixed(${f.id})">✕</button></div>`;
+  }).join('');
+  document.getElementById('fDailyT').textContent=fmt(S.fixed.filter(f=>f.freq==='daily').reduce((s,f)=>s+f.amt,0));
+  document.getElementById('fPeriodT').textContent=fmt(fixedTotal());
+  summ.style.display='';
+}
+
+const catC={'Food & Drink':'#0fa888','Entertainment':'#5b6af0','Transport':'#d4890a','Shopping':'#e8547a','Health':'#7b88f5','Other':'#7a7590'};
+function addExtra(){
+  const name=document.getElementById('extraName').value.trim();
+  const amt=+document.getElementById('extraAmt').value;
+  const date=document.getElementById('extraDate').value;
+  const cat=document.getElementById('extraCat').value;
+  if(!name||!amt) return;
+  S.extras.push({id:Date.now(),name,amt,date,cat});
+  document.getElementById('extraName').value='';document.getElementById('extraAmt').value='';
+  renderExtras();
+}
+function removeExtra(id){S.extras=S.extras.filter(e=>e.id!==id);renderExtras();}
+function renderExtras(){
+  const list=document.getElementById('extraList');const row=document.getElementById('extraTotRow');
+  if(!S.extras.length){list.innerHTML='<div class="empty-st">Nothing logged yet</div>';row.style.display='none';return;}
+  list.innerHTML=[...S.extras].reverse().map(e=>`
+    <div class="tx-item">
+      <div class="tx-dot" style="background:${catC[e.cat]||'#888'}"></div>
+      <div style="flex:1"><div class="tx-name">${e.name}</div><div class="tx-cat">${e.cat}${e.date?' · '+e.date:''}</div></div>
+      <div class="tx-amt neg">${fmt(e.amt)}</div>
+      <button class="fi-del" onclick="removeExtra(${e.id})" style="margin-left:6px">✕</button>
+    </div>`).join('');
+  document.getElementById('extraTot').textContent=fmt(extrasTotal());
+  row.style.display='';
+}
+
+function getPieColors(){
+  return S.dark
+    ? ['#7b88f5','#f07098','#1dd4aa','#2a2a3e']
+    : ['#5b6af0','#e8547a','#0fa888','#c8c3b8'];
+}
+function updatePieColors(){
+  if(!pieChart) return;
+  const c=getPieColors();
+  pieChart.data.datasets[0].backgroundColor=c;
+  pieChart.data.datasets[0].borderColor=S.dark?'#080808':'#f7f5f0';
+  pieChart.update();
+}
+
+function recalc(){
+  const a=avail(),d=days(),fi=fixedTotal(),ex=extrasTotal(),ot=outTotal();
+  const total=fi+ex+ot;const rem=a-total;
+  const dailyFixed=S.fixed.filter(f=>f.freq==='daily').reduce((s,f)=>s+f.amt,0);
+  const nonOut=Math.max(1,d-S.outingDays);const dailyFree=rem>0?rem/nonOut:0;
+
+  if(S.periodMode==='remaining'){
+    document.getElementById('ovBanner').innerHTML=`<div class="mode-banner"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5v.5"/></svg><div>Mid-period: showing budget for <strong>${d} remaining days</strong>. Original: ${fmt(S.origBudget)}, spent: ${fmt(S.alreadySpent)}.</div></div>`;
+  } else document.getElementById('ovBanner').innerHTML='';
+  document.getElementById('ovSub').textContent=S.periodMode==='remaining'?`Covering your ${d} remaining days`:`Full ${d}-day period`;
+
+  document.getElementById('hlRem').textContent=fmt(Math.max(0,rem));
+  document.getElementById('hlSub').textContent=rem>=0?`after fixed (${fmt(fi)}), extras (${fmt(ex)}), outings (${fmt(ot)})`:`⚠ Over by ${fmt(Math.abs(rem))}`;
+
+  document.getElementById('ovAvail').textContent=fmt(a);
+  document.getElementById('ovAvailSub').textContent=S.periodMode==='remaining'?`${fmt(S.origBudget)} − ${fmt(S.alreadySpent)}`:`for ${d} days`;
+  document.getElementById('ovFixed').textContent=fmt(fi);
+  document.getElementById('ovFixedSub').textContent=`over ${d} days`;
+  document.getElementById('ovOutings').textContent=fmt(ot);
+  document.getElementById('ovOutSub').textContent=`${S.outingDays}d × ${fmt(S.outingPerDay)}`;
+
+  const rows=[['Available',fmt(a),''],['Fixed',`−${fmt(fi)}`,'neg'],['Extras',`−${fmt(ex)}`,'neg'],['Outings',`−${fmt(ot)}`,'neg'],['Remaining',fmt(Math.max(0,rem)),rem>=0?'pos':'neg']];
+  document.getElementById('bdRows').innerHTML=rows.map(([k,v,c])=>`<div class="srow"><span class="skey">${k}</span><span class="sval tx-amt ${c}">${v}</span></div>`).join('');
+
+  const pct=Math.min(100,Math.round(total/Math.max(1,a)*100));
+  const bar=document.getElementById('budgetBar');
+  bar.style.width=pct+'%';bar.className='pbar-fill'+(pct>90?' bad':pct>70?' warn':' ok');
+  document.getElementById('budgetPct').textContent=pct+'% committed';
+
+  const fr=v=>Math.max(0,Math.min(100,v/Math.max(1,a)*100));
+  document.getElementById('hb-f').style.flex=fr(fi);document.getElementById('hb-f').textContent=fr(fi)>10?Math.round(fr(fi))+'%':'';
+  document.getElementById('hb-e').style.flex=fr(ex);document.getElementById('hb-e').textContent=fr(ex)>10?Math.round(fr(ex))+'%':'';
+  document.getElementById('hb-o').style.flex=fr(ot);document.getElementById('hb-o').textContent=fr(ot)>10?Math.round(fr(ot))+'%':'';
+  const rfr=fr(Math.max(0,rem));document.getElementById('hb-r').style.flex=rfr;document.getElementById('hb-r').textContent=rfr>10?Math.round(rfr)+'%':'';
+
+  document.getElementById('spendRec').innerHTML=`
+    <div class="spi-item"><div class="spi-label">Daily fixed</div><div class="spi-val">${fmt(dailyFixed)}</div></div>
+    <div class="spi-item"><div class="spi-label">Per outing</div><div class="spi-val">${fmt(S.outingPerDay)}</div></div>
+    <div class="spi-item"><div class="spi-label">Free per day</div><div class="spi-val">${fmt(dailyFree)}</div></div>
+    <div class="spi-item"><div class="spi-label">Days left</div><div class="spi-val">${d}</div></div>`;
+
+  const recs=[];
+  if(rem<0) recs.push(['al-bad',`Over budget by ${fmt(Math.abs(rem))}. Cut outings or fixed costs.`]);
+  else if(rem<a*0.1) recs.push(['al-warn','Very tight — skip an outing or two.']);
+  else recs.push(['al-ok',`${fmt(rem)} free — ${fmt(dailyFree)}/day on normal days.`]);
+  if(S.periodMode==='remaining') recs.push(['al-info',`Mid-period: fixed costs counted for ${d} days only.`]);
+  if(ex>fi*0.4&&ex>0) recs.push(['al-warn','Extras are growing. Keep logging to stay on track.']);
+  document.getElementById('recs').innerHTML=recs.map(([t,m])=>`<div class="alert ${t}">${m}</div>`).join('');
+
+  renderPie(fi,ex,ot,Math.max(0,rem));
+}
+
+function renderPie(fi,ex,ot,freeRem){
+  const labels=['Fixed','Extras','Outings','Free'];
+  const data=[Math.round(fi),Math.round(ex),Math.round(ot),Math.round(freeRem)];
+  const colors=getPieColors();
+  const bg=S.dark?'#080808':'#f7f5f0';
+
+  const legend=document.getElementById('pieLegend');
+  legend.innerHTML=labels.map((l,i)=>`<div class="dot-leg"><span style="background:${colors[i]};border-radius:2px"></span>${l}: ${fmt(data[i])}</div>`).join('');
+
+  if(pieChart){pieChart.destroy();pieChart=null;}
+  const ctx=document.getElementById('spendPie').getContext('2d');
+  pieChart=new Chart(ctx,{
+    type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderColor:bg,borderWidth:3,hoverBorderWidth:3}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'60%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.raw)}`}}},
+      animation:{animateRotate:true,duration:600}
+    }
+  });
+}
+
+function renderCal(){
+  const today=new Date();const y=today.getFullYear(),m=today.getMonth();
+  const dim=new Date(y,m+1,0).getDate();const fd=new Date(y,m,1).getDay();
+  const td=today.getDate();const d=days();
+  const rs=td,re=Math.min(dim,td+d-1);
+  document.getElementById('calLabel').textContent=today.toLocaleString('default',{month:'long',year:'numeric'});
+  document.getElementById('calNote').textContent=`Highlighted: day ${rs}–${re} (your ${d}-day window)`;
+  const ed={};S.extras.forEach(e=>{if(e.date){const dd=new Date(e.date).getDate();ed[dd]=(ed[dd]||0)+e.amt;}});
+  let html='<div></div>'.repeat(fd);
+  for(let dd=1;dd<=dim;dd++){
+    const inR=dd>=rs&&dd<=re;const hasE=!!ed[dd];const isT=dd===td;const isPast=dd<td;
+    let cls='day-cell';
+    if(hasE) cls+=' has-extra';else if(inR) cls+=' in-range';
+    if(isT) cls+=' today';if(isPast&&!isT) cls+=' past';
+    html+=`<div class="${cls}">${dd}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML=html;
+}
+
+function toggleGF(){const c=document.getElementById('goalFC');c.style.display=c.style.display==='none'?'':'none';}
+function addGoal(){
+  const name=document.getElementById('goalName').value.trim();const target=+document.getElementById('goalTarget').value||0;
+  const saved=+document.getElementById('goalSaved').value||0;const monthly=+document.getElementById('goalMonthly').value||0;
+  if(!name||!target) return;
+  S.goals.push({id:Date.now(),name,target,saved,monthly});toggleGF();renderGoals();
+}
+function removeGoal(id){S.goals=S.goals.filter(g=>g.id!==id);renderGoals();}
+function renderGoals(){
+  const el=document.getElementById('goalsList');
+  if(!S.goals.length){el.innerHTML='<div class="empty-st" style="padding:40px">No goals yet</div>';return;}
+  el.innerHTML=S.goals.map(g=>{
+    const pct=Math.min(100,Math.round(g.saved/g.target*100));
+    const months=g.monthly>0?Math.ceil((g.target-g.saved)/g.monthly):null;
+    return `<div class="card" style="margin-bottom:9px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <div style="font-size:13px;font-weight:700">${g.name}</div>
+        <button class="fi-del" onclick="removeGoal(${g.id})">✕</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2)"><span>${fmt(g.saved)} saved</span><span>Target: ${fmt(g.target)}</span></div>
+      <div class="goal-meter"><div class="goal-fill" style="width:${pct}%"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="mtag mtag-teal">${pct}% done</span>
+        ${months?`<span style="font-size:10px;color:var(--text3)">${months} months at ${fmt(g.monthly)}/mo</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('extraDate').value=new Date().toISOString().split('T')[0];
+updateRemPreview();renderFixed();renderExtras();renderGoals();
+</script>
